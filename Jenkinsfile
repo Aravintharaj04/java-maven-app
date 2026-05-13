@@ -1,36 +1,20 @@
-#! /usr/bin/env groovy
-@Library('jenkins-shared-library')
-
-def gv
+#!/usr/bin.env groovy
 
 pipeline {
     agent any
-    tools {
-        maven 'maven-3.9.9'
-    }
     stages {
-        stage("init") {
+        stage("test") {
             steps {
                 script {
-                    gv = load "script.groovy"
-                }
-            }
-        }
-        stage("build jar") {
-            steps {
-                script {
-                    buildJar()
+                    echo "Testing the application..."
 
                 }
             }
         }
-
-        stage("build image") {
+        stage("build") {
             steps {
                 script {
-                    buildImage 'aravintharaj04/maven-repo:jma-4.0'
-                    dockerLogin()
-                    dockerPush 'aravintharaj04/maven-repo:jma-4.0'
+                    echo "Building the application..."
                 }
             }
         }
@@ -38,9 +22,13 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    gv.deployApp()
+                   def dockerCmd = 'docker run -p 3080:3080 -d aravintharaj04/maven-repo:5.0'
+                   }sshagent(['ec2-user']) {
+                       sh "ssh -o StrictHostKeyChecking=no ec2-user@40.192.100.141 ${dockerCmd}"
+                   }
                 }
             }
         }
     }
-} 
+}
+
