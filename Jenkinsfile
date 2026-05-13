@@ -13,7 +13,7 @@ pipeline {
         maven 'maven-3.9.9'
     }
     environment {
-        IMAGE_NAME = 'nanatwn/demo-app:java-maven-1.0'
+        IMAGE_NAME = 'aravintharaj04/maven-repo:jma-5.0'
     }
     stages {
         stage('build app') {
@@ -37,8 +37,8 @@ pipeline {
                 script {
                     echo 'deploying docker image to EC2...'
                     def dockerCmd = "docker run -p 3080:3080 -d ${IMAGE_NAME}"
-                    sshagent(['ec2-server-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@18.184.54.160 ${dockerCmd}"
+                    sshagent(['ec2-agent']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@40.192.100.141 ${dockerCmd}"
                     }
                 }
             }               
