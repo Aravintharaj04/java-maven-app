@@ -1,35 +1,41 @@
+def gv
+
 pipeline {   
     agent any
-    parameters {
-        choice(name: 'ENV', choices: ['dev', 'qa', 'prod'], description: 'Select the environment to deploy')
-        booleanParam(name: 'executeTest', defaultValue: true, description: 'Test Execution')
-}
+    tools {
+        maven 'Maven'
+    }
     stages {
-        stage("build") {
+        stage("init") {
             steps {
                 script {
-                    echo 'Build started...'
+                    gv = load "script.groovy"
                 }
             }
         }
-        stage("test") {
-         when {
-                            expression { params.executeTest }
-                        }
+        stage("build jar") {
             steps {
-
                 script {
-                    echo 'Test Started...'
+                    gv.buildJar()
+
                 }
             }
         }
 
-        stage("Deploy") {
+        stage("build image") {
             steps {
                 script {
-                    echo 'Deployed...'
+                    gv.buildImage()
                 }
             }
-        }            
+        }
+
+        stage("deploy") {
+            steps {
+                script {
+                    gv.deployApp()
+                }
+            }
+        }               
     }
 } 
