@@ -29,6 +29,8 @@ pipeline {
             steps {
                 script {
                     buildImage 'aravintharaj04/maven-repo:jma-4.0'
+                    dockerLogin()
+                    dockerPush 'aravintharaj04/maven-repo:jma-4.0'
                 }
             }
         }
