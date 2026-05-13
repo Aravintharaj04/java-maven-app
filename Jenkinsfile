@@ -20,7 +20,7 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    def dockerCmd = 'docker run -p 3080:3080 -d aravintharaj04/maven-repo:5.0'
+                    def dockerCmd = 'docker run -p 3080:3080 -d aravintharaj04/maven-repo:jma-4.0'
                     sshagent(['ec2-user']) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@40.192.100.141 ${dockerCmd}"
                     }
